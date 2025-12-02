@@ -207,3 +207,34 @@ export async function getUserMachineProgress(apiKey: string, userId: number): Pr
     const response = await makeRequest<any>(apiKey, 'GET', `user/profile/progress/machines/os/${userId}`);
     return response.profile.operating_systems;
 }
+
+// VPN / Pwnbox Switching
+export async function getVpnServers(apiKey: string, product: string = 'pwnbox'): Promise<any[]> {
+    // Product can be 'pwnbox', 'prolab', 'starting_point', etc.
+    // The python code uses `connections/servers?product={product}`
+    // Note: For prolab, it might need specific handling or just pass 'prolab' as product?
+    // Python code handles prolab specifically by iterating prolabs.
+    // But for pwnbox switching, usually it's about switching the context for the "pwnbox" product or specific labs.
+    // Let's expose the raw list for now.
+    const response = await makeRequest<any>(apiKey, 'GET', `connections/servers?product=${product}`);
+    // The response structure is complex (grouped by location), let's return the raw data or flatten it?
+    // Python flattens it. Let's return raw data for flexibility or implement flattening if needed.
+    // For simplicity in this port, let's return the data object which contains locations.
+    return response.data;
+}
+
+export async function switchVpn(apiKey: string, vpnServerId: number): Promise<{ success: boolean; message: string }> {
+    try {
+        const response = await makeRequest<any>(apiKey, 'POST', `connections/servers/switch/${vpnServerId}`, { id: vpnServerId });
+        if (response.message) {
+            // Check for specific error messages like "active machine before switching"
+            if (response.message.includes('active machine before switching')) {
+                return { success: false, message: response.message };
+            }
+            return { success: true, message: response.message };
+        }
+        return { success: true, message: 'Switched VPN server' };
+    } catch (e: any) {
+        return { success: false, message: e.message };
+    }
+}

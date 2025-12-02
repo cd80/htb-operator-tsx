@@ -81,3 +81,13 @@ export interface ApiResponse<T> {
     info?: T; // Sometimes data is in 'info'
     success?: string | boolean; // Sometimes '0' or '1' or true/false
 }
+
+export interface VpnServer {
+    id: number;
+    friendly_name: string;
+    current_clients: number;
+    is_dedicated: boolean;
+    is_assigned: boolean;
+    location: string;
+    // Add other fields as needed
+}

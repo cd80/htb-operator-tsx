@@ -131,6 +131,26 @@ console.log(labInfo);
 await submitProLabFlag(API_KEY, proLabId, 'HTB{...}');
 ```
 
+### VPN / Pwnbox Switching
+
+**List VPN Servers**
+```typescript
+// Get servers for Pwnbox
+const servers = await getVpnServers(API_KEY, 'pwnbox');
+console.log(servers);
+```
+
+**Switch VPN Server**
+```typescript
+const serverId = 123; // ID from getVpnServers
+const switchResult = await switchVpn(API_KEY, serverId);
+if (switchResult.success) {
+  console.log('Switched VPN server');
+} else {
+  console.error('Failed to switch:', switchResult.message);
+}
+```
+
 ### User Progress
 
 **Get Machine Progress**
