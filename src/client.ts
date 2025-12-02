@@ -135,6 +135,25 @@ export async function terminatePwnbox(apiKey: string): Promise<{ success: boolea
     return { success: true, message: 'Pwnbox terminated' };
 }
 
+export async function getPwnboxSshCredentials(apiKey: string): Promise<{ hostname: string; username: string; password?: string; command: string } | null> {
+    const status = await getPwnboxStatus(apiKey);
+    if (!status || !status.is_ready) {
+        return null;
+    }
+
+    // Construct SSH command similar to python version: sshpass -p {password} ssh {user}@{host}
+    // Note: We just return the string, we don't execute it.
+    const password = status.vnc_password;
+    const command = `sshpass -p '${password}' ssh ${status.username}@${status.hostname}`;
+
+    return {
+        hostname: status.hostname,
+        username: status.username,
+        password: password,
+        command: command
+    };
+}
+
 export async function extendPwnbox(apiKey: string): Promise<{ success: boolean; message: string }> {
     // Note: Python code didn't explicitly show extend pwnbox, but user asked for it.
     // I need to guess or check if there is an endpoint.

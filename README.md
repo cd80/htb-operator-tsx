@@ -111,6 +111,17 @@ await terminatePwnbox(API_KEY);
 await extendPwnbox(API_KEY);
 ```
 
+**Get SSH Credentials**
+```typescript
+const ssh = await getPwnboxSshCredentials(API_KEY);
+if (ssh) {
+  console.log(`SSH Command: ${ssh.command}`);
+  console.log(`Password: ${ssh.password}`);
+} else {
+  console.log('Pwnbox not ready');
+}
+```
+
 ### ProLabs
 
 **List ProLabs**

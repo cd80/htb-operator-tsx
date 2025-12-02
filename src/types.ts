@@ -54,6 +54,8 @@ export interface PwnboxStatus {
     location: string;
     life_remaining: number;
     expires_at: string;
+    vnc_password?: string;
+    vnc_view_only_password?: string;
 }
 
 export interface PwnboxUsage {
